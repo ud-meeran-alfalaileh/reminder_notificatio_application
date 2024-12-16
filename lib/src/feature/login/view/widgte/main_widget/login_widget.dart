@@ -8,6 +8,7 @@ import 'package:time_async/src/feature/login/controller/login_controller.dart';
 import 'package:time_async/src/feature/login/model/login_form_model.dart';
 import 'package:time_async/src/feature/login/view/widgte/collection/auth_form_widget.dart';
 import 'package:time_async/src/feature/login/view/widgte/text/login_text.dart';
+import 'package:time_async/src/feature/nav_bar/view/main/navbar_page.dart';
 import 'package:time_async/src/feature/register/view/widget/main_widget/register_page.dart';
 
 class LoginWidget extends StatefulWidget {
@@ -148,7 +149,9 @@ class _LoginWidgetState extends State<LoginWidget> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                nextButton(() {}),
+                                nextButton(() {
+                                  Get.to(NavBarPage());
+                                }),
                               ],
                             ),
                             10.0.kH,

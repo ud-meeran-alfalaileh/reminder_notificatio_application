@@ -144,7 +144,7 @@ class RegisterPage extends StatelessWidget {
                                 ],
                               ),
                               (5.5).kH,
-                            Stack(
+                              Stack(
                                 children: [
                                   AuthForm(
                                     formModel: FormModel(
@@ -219,5 +219,8 @@ class RegisterPage extends StatelessWidget {
 }
 
 nextButton(VoidCallback onTap) {
-  return Image.asset('assets/image/signButton.png');
+  return GestureDetector(
+    onTap: onTap,
+    child: Image.asset('assets/image/signButton.png'),
+  );
 }

@@ -86,7 +86,7 @@ class HomePage extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              width: context.screenWidth * .81,
+              width: context.screenWidth * .8,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
