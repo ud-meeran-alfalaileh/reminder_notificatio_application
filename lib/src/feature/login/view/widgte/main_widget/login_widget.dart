@@ -8,7 +8,6 @@ import 'package:time_async/src/feature/login/controller/login_controller.dart';
 import 'package:time_async/src/feature/login/model/login_form_model.dart';
 import 'package:time_async/src/feature/login/view/widgte/collection/auth_form_widget.dart';
 import 'package:time_async/src/feature/login/view/widgte/text/login_text.dart';
-import 'package:time_async/src/feature/nav_bar/view/main/navbar_page.dart';
 import 'package:time_async/src/feature/register/view/widget/main_widget/register_page.dart';
 
 class LoginWidget extends StatefulWidget {
@@ -58,44 +57,23 @@ class _LoginWidgetState extends State<LoginWidget> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      (context.screenHeight * .1).kH,
+                      // SizedBox(
+                      //   height: 20,
+                      // ),
+                      50.0.kH,
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25),
                         child: Column(
                           children: [
                             Image.asset(
                               'assets/image/logo (2).png',
-                              width: context.screenWidth * .6,
+                              // width: context.screenWidth * .6,
                               height: context.screenHeight * .3,
                               fit: BoxFit.fitWidth,
                             ),
                             10.0.kH,
                             LoginText.mainText('Sign In'),
-                            Obx(() {
-                              return errorText.value != "valid"
-                                  ? Column(
-                                      children: [
-                                        (10.5).kH,
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 10.0),
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                errorText.value,
-                                                style: const TextStyle(
-                                                    color: Colors.red,
-                                                    fontSize: 14.0),
-                                                textAlign: TextAlign.start,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : const SizedBox
-                                      .shrink(); // If no errors, display nothing
-                            }),
+                            //email
                             AuthForm(
                               formModel: FormModel(
                                   icon: Icons.person_2_outlined,
@@ -109,6 +87,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                   onTap: () {}),
                             ),
                             (20.5).kH,
+                            //password
                             Stack(
                               children: [
                                 AuthForm(
@@ -150,7 +129,8 @@ class _LoginWidgetState extends State<LoginWidget> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 nextButton(() {
-                                  Get.to(NavBarPage());
+                                  controller.login(context);
+                                  // Get.to(NavBarPage());
                                 }),
                               ],
                             ),

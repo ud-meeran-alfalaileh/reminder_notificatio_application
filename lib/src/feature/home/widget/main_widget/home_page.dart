@@ -1,19 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:time_async/src/config/sizes/size_box_extension.dart';
 import 'package:time_async/src/config/sizes/sizes.dart';
 import 'package:time_async/src/config/theme/theme.dart';
+import 'package:time_async/src/core/user.dart';
 import 'package:time_async/src/feature/home/controller/home_controller.dart';
 import 'package:time_async/src/feature/home/model/tesk_model.dart';
 import 'package:time_async/src/feature/home/widget/collection/add_edit_task_page.dart';
 import 'package:time_async/src/feature/home/widget/text/home_text.dart';
+import 'package:time_async/src/feature/nav_bar/view/main/navbar_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final controller = Get.put(HomeController());
+  User user = User();
+  @override
+  void initState() {
+    user.loadToken();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final controller = Get.put(HomeController());
     return Scaffold(
       backgroundColor: AppTheme.lightAppColors.background,
       body: SafeArea(
@@ -24,6 +39,20 @@ class HomePage extends StatelessWidget {
               SingleChildScrollView(
                 child: Column(
                   children: [
+                    Row(
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              user.clearId();
+                              Get.offAll(() => NavBarPage());
+                              OneSignal.logout();
+                            },
+                            icon: const Icon(
+                              Icons.logout,
+                              color: Colors.white,
+                            ))
+                      ],
+                    ),
                     20.0.kH,
                     Image.asset(
                       'assets/image/clock.png',
@@ -46,7 +75,7 @@ class HomePage extends StatelessWidget {
                         },
                         itemBuilder: (BuildContext context, int index) {
                           var light =
-                              controller.tasks[index].learnignnotification;
+                              controller.tasks[index].learnignnotification.obs;
                           return taskContainer(context, light,
                               controller.tasks[index], controller, index);
                         },
@@ -73,7 +102,7 @@ class HomePage extends StatelessWidget {
   }
 
   taskContainer(BuildContext context, RxBool light, TaskModel model,
-      HomeController controller, index) {
+      HomeController controller, int index) {
     return GestureDetector(
       onTap: () {
         Get.to(() => AddEditTaskPage(
@@ -96,14 +125,13 @@ class HomePage extends StatelessWidget {
                       Color(0xff363E46),
                       Color(0xff3F4850),
                     ]),
-                // Card background color
-                borderRadius: BorderRadius.circular(30), // Rounded corners
+                borderRadius: BorderRadius.circular(30),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1), // Shadow color
-                    blurRadius: 6, // How blurry the shadow is
-                    spreadRadius: 10, // How much the shadow spreads
-                    offset: const Offset(2, 4), // Position of the shadow
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 6,
+                    spreadRadius: 10,
+                    offset: const Offset(2, 4),
                   ),
                 ],
               ),
@@ -113,19 +141,15 @@ class HomePage extends StatelessWidget {
                   Row(
                     children: [
                       HomeText.secText(model.taskTime),
-                      Spacer(),
+                      const Spacer(),
                       Obx(
                         () => Switch(
-                          // This bool value toggles the switch.
                           value: light.value,
                           activeColor:
                               AppTheme.lightAppColors.primary.withOpacity(0.5),
-                          onChanged: (bool value) {
-                            print(light.value);
-                            light.value = value;
-                          },
+                          onChanged: (bool value) {},
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ],
@@ -135,7 +159,7 @@ class HomePage extends StatelessWidget {
               children: [
                 IconButton(
                     onPressed: () {
-                      controller.tasks.removeAt(index);
+                      controller.deleteTask(model.id);
                     },
                     icon: Icon(
                       Icons.delete,

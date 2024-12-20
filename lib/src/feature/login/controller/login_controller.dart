@@ -1,14 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:time_async/src/core/api/api_services.dart';
-import 'package:time_async/src/core/api/end_points.dart';
-import 'package:time_async/src/core/api/injection_container.dart';
-import 'package:time_async/src/core/api/netwok_info.dart';
-import 'package:time_async/src/core/api/status_code.dart';
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:time_async/src/core/user.dart';
- import 'package:get/get.dart';
- import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:time_async/src/feature/nav_bar/view/main/navbar_page.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
@@ -19,7 +15,6 @@ class LoginController extends GetxController {
   RxBool isLoading = false.obs;
 
   RxBool unauthorized = false.obs;
-  final DioConsumer dioConsumer = sl<DioConsumer>();
 
   //validation
   String removeLeadingZero(String input) {
@@ -45,7 +40,7 @@ class LoginController extends GetxController {
     return null;
   }
 
-  Future<void> loginUser(String externalId) async {
+  Future<void> loginUser(externalId) async {
     try {
       await OneSignal.login(externalId);
 
@@ -60,47 +55,32 @@ class LoginController extends GetxController {
     isLoading.value = true;
     try {
       final body = jsonEncode({
-        "phone": "962${removeLeadingZero(emailcontroller.text.trim())}",
+        "email": emailcontroller.text.trim(),
         "password": password.text.trim(),
       });
-      final response = await dioConsumer.post(EndPoints.login, body: body);
+      final response = await http.post(
+        Uri.parse("http://166.1.227.102:7010/api/User/login"),
+        body: body,
+        headers: {
+          'Content-Type': 'application/json',
+          // 'Accept': 'application/json',
+        },
+      );
+      print(response.body);
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
 
-      if (response.statusCode == StatusCode.ok) {
-        final jsonData = json.decode(response.data);
-        final type = jsonData['userType'];
-        final number = jsonData['phone'];
-        print(response.data);
-        print(number.toString());
-        if (type == 'User') {
-          final token = jsonData['userId'];
-          await user.saveId(token);
-          user.userId.value = token;
-          await loginUser(number.toString());
-          // showTopSnackBar(
-          //   Overlay.of(context),
-          //   CustomSnackBar.success(
-          //     message: "loginSuccess".tr,
-          //   ),
-          // );
-          isLoading.value = false;
+        final token = jsonData['userId'];
+        await user.saveId(token);
+        user.userId.value = token;
+        await loginUser(token.toString());
 
-          Get.offAll(const NavBarPage());
-          emailcontroller.clear();
-          password.clear();
-        } else {
-          final jsonData = json.decode(response.data);
-          final token = jsonData['vendorId'];
-          final number = jsonData['phone'];
-          print("the phone number $number");
-          await user.saveVendorId(token);
-          user.vendorId.value = token;
+        isLoading.value = false;
 
-          await loginUser(number.toString());
-          isLoading.value = false;
-          Get.offAll(const NavBarPage());
-          emailcontroller.clear();
-          password.clear();
-        }
+        Get.offAll(const NavBarPage());
+        emailcontroller.clear();
+        password.clear();
       } else {
         isLoading.value = false;
 

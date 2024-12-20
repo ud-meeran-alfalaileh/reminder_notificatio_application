@@ -4,7 +4,6 @@ import 'package:time_async/src/config/theme/theme.dart';
 
 class CustomNavItem extends StatelessWidget {
   final Widget icon;
-  final String title;
   final VoidCallback onTap;
   final bool isSelected;
 
@@ -13,7 +12,7 @@ class CustomNavItem extends StatelessWidget {
       required this.icon,
       required this.onTap,
       required this.isSelected,
-      required this.title});
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -29,18 +28,7 @@ class CustomNavItem extends StatelessWidget {
                 : AppTheme.lightAppColors.maincolor.withOpacity(.6),
             BlendMode.srcIn,
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              icon,
-              // 5.0.kH,
-              // Text(
-              //   title,
-              //   style:
-              //       const TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
-              // ),
-            ],
-          ),
+          child: icon,
         ),
       ),
     );

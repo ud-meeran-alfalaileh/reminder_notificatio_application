@@ -25,8 +25,7 @@ class RegisterPage extends StatelessWidget {
       // Validate each form field and collect errors
       final emailError = controller.vaildEmail(controller.email.text);
       final passwordError = controller.vaildPassword(controller.password.text);
-      final confirmPasswordError =
-          controller.validConfirmPassword(controller.password.text);
+      final confirmPasswordError = controller.validConfirmPassword();
 
       if (emailError != null) errors.add("- $emailError");
       if (passwordError != null) errors.add("- $passwordError");
@@ -66,26 +65,16 @@ class RegisterPage extends StatelessWidget {
                                 fit: BoxFit.fitWidth,
                               ),
                               10.0.kH,
-                              LoginText.mainText('Sign Up'),
                               Obx(() {
                                 return errorText.value != "valid"
-                                    ? Column(
+                                    ? Row(
                                         children: [
-                                          (10.5).kH,
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 10.0),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  errorText.value,
-                                                  style: const TextStyle(
-                                                      color: Colors.red,
-                                                      fontSize: 14.0),
-                                                  textAlign: TextAlign.start,
-                                                ),
-                                              ],
-                                            ),
+                                          Text(
+                                            errorText.value,
+                                            style: const TextStyle(
+                                                color: Colors.red,
+                                                fontSize: 14.0),
+                                            textAlign: TextAlign.start,
                                           ),
                                         ],
                                       )
@@ -185,7 +174,11 @@ class RegisterPage extends StatelessWidget {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  nextButton(() {}),
+                                  nextButton(() {
+                                    errorText.value = validateAllFields()!;
+
+                                    // controller.register(context);
+                                  }),
                                 ],
                               ),
                               20.0.kH,

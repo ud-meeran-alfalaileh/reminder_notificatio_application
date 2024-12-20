@@ -6,14 +6,12 @@ import 'package:time_async/src/feature/login/model/login_form_model.dart';
 class AuthForm extends StatefulWidget {
   AuthForm({
     required this.formModel,
-    this.maxLine,
     this.ontap,
     super.key,
   });
 
   FormModel formModel;
   VoidCallback? ontap;
-  int? maxLine;
 
   @override
   State<AuthForm> createState() => _AuthFormState();
@@ -39,8 +37,6 @@ class _AuthFormState extends State<AuthForm> {
       child: TextFormField(
           onTap: widget.ontap,
           onChanged: widget.formModel.onChange,
-          maxLines: widget.maxLine ?? 1,
-          minLines: widget.maxLine ?? 1,
           textInputAction: TextInputAction.done,
           cursorColor: AppTheme.lightAppColors.black,
           style: TextStyle(

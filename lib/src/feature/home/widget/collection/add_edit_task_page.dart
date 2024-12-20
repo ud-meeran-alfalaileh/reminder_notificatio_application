@@ -29,15 +29,14 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
             controller.taskDescription.text = widget.task!.taskDescription,
             controller.taskDate.text = widget.task!.taskDate,
             controller.taskTime.text = widget.task!.taskTime,
+            controller.notificationSettingssTime.value = widget.task!.period,
+            controller.learnignnotification.value =
+                widget.task!.learnignnotification,
             controller.notificationSetting.text =
-                widget.task!.notificationSetting,
-            controller.learnignnotification =
-                widget.task!.learnignnotification.value,
-            controller.notificationSetting.text =
-                widget.task!.notificationSetting,
+                widget.task!.period.toString(),
             controller.notificationSettingss.value =
                 widget.task!.notificationSetting,
-            light.value = widget.task!.learnignnotification.value
+            light.value = widget.task!.learnignnotification
           }
         : {
             controller.taskName.clear(),
@@ -45,7 +44,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
             controller.taskDate..clear(),
             controller.taskTime..clear(),
             controller.notificationSetting.clear(),
-            controller.learnignnotification = false,
+            controller.learnignnotification.value = false,
             light.value = false
           };
     super.initState();
@@ -83,6 +82,7 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                             activeColor: AppTheme.lightAppColors.primary,
                             onChanged: (bool value) {
                               light.value = value;
+                              controller.learnignnotification = light;
                             },
                           ),
                         )
@@ -201,24 +201,27 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                       return GestureDetector(
                         onTap: () {
                           controller.notificationSetting.text =
-                              controller.notificationSettings[index];
-                          controller.notificationSettingss.value =
-                              controller.notificationSettings[index];
-                          print(controller.notificationSetting.text);
+                              controller.notificationSettings[index].name;
+
+                          controller.notificationSettingssTime.value =
+                              controller.notificationSettings[index].time;
+                          print(controller.notificationSettingssTime.value);
                         },
                         child: Obx(
                           () => Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
-                                color: controller.notificationSettingss.value ==
-                                        controller.notificationSettings[index]
+                                color: controller
+                                            .notificationSettingssTime.value ==
+                                        controller
+                                            .notificationSettings[index].time
                                     ? AppTheme.lightAppColors.primary
                                     : AppTheme.lightAppColors.background,
                               ),
                               child: Center(
-                                child: HomeText.titlShowText(
-                                    controller.notificationSettings[index]),
+                                child: HomeText.titlShowText(controller
+                                    .notificationSettings[index].name),
                               )),
                         ),
                       );
@@ -230,18 +233,9 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                   onTap: () {
                     widget.type == 'add'
                         ? {
-                            controller.tasks.add(TaskModel(
-                                taskName: controller.taskName.text,
-                                taskDescription:
-                                    controller.taskDescription.text,
-                                taskTime: controller.taskTime.text,
-                                taskDate: controller.taskDate.text,
-                                notificationSetting:
-                                    controller.notificationSetting.text,
-                                learnignnotification: light)),
-                            Get.back()
+                            controller.addTask(),
                           }
-                        : null;
+                        : {controller.updateTask(widget.task!.id)};
                   },
                   child: Container(
                     width: context.screenWidth * .5,
@@ -295,7 +289,6 @@ Future taskTimeWidget(BuildContext context, TextEditingController text) async {
             }),
             dayPeriodColor: AppTheme.lightAppColors.primary,
             dayPeriodTextColor: AppTheme.lightAppColors.mainTextcolor,
-
             hourMinuteColor: Colors.white,
             hourMinuteTextColor: AppTheme
                 .lightAppColors.primary, // Color of the selected time (hours)
@@ -307,10 +300,12 @@ Future taskTimeWidget(BuildContext context, TextEditingController text) async {
   );
 
   if (newTime != null) {
-    final hour = newTime.hour;
+    final hour = newTime.hour.toString().padLeft(2, '0');
+    final minute = newTime.minute.toString().padLeft(2, '0');
+    const seconds =
+        '00'; // Add seconds as "00" since TimeOfDay does not support seconds.
 
-    text.text =
-        "$hour:${newTime.minute}"; // Display only the hours with 00 minutes
+    text.text = "$hour:$minute:$seconds"; // Display the time in hh:mm:ss format
   }
 }
 

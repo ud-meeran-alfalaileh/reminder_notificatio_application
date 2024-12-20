@@ -61,4 +61,40 @@ class HomeText {
       ),
     );
   }
+
+  static notificationText(title) {
+    return Text(
+      title,
+      style: TextStyle(
+        fontFamily: 'Kanti',
+        fontSize: 17,
+        color: AppTheme.lightAppColors.mainTextcolor.withOpacity(0.8),
+        fontWeight: FontWeight.w600, // Use FontWeight.bold for the bold variant
+      ),
+    );
+  }
+
+  static chatText(title) {
+    return Text(
+      title,
+      style: TextStyle(
+        fontFamily: 'Kanti',
+        fontSize: 15,
+        color: AppTheme.lightAppColors.black,
+        fontWeight: FontWeight.w300, // Use FontWeight.bold for the bold variant
+      ),
+    );
+  }
+
+  static headerText(title) {
+    return Text(
+      title,
+      style: TextStyle(
+        fontFamily: 'Kanti',
+        fontSize: 17,
+        color: AppTheme.lightAppColors.black,
+        fontWeight: FontWeight.w600, // Use FontWeight.bold for the bold variant
+      ),
+    );
+  }
 }

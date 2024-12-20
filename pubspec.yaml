@@ -44,6 +44,8 @@ dependencies:
   onesignal_flutter: ^5.2.8
   flutter_svg: ^2.0.16
   flutter_phoenix: ^1.1.1
+  http: ^1.2.2
+  dash_chat_2: ^0.0.21
 
 
 dev_dependencies:

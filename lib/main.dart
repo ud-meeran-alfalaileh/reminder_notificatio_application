@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:get/get.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:time_async/src/config/theme/theme.dart';
-import 'package:time_async/src/core/api/injection_container.dart' as di;
-import 'package:time_async/src/feature/login/view/pages/login_page.dart';
+import 'package:time_async/src/feature/nav_bar/view/main/navbar_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await di.init();
-
+ OneSignal.initialize("958e39d4-1b6d-40f1-a50a-c513d9a7a39e");
+  OneSignal.Notifications.requestPermission(true);
   runApp(Phoenix(child: const MyApp()));
 }
 
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       title: 'timeSync',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
-      home: const LoginPage(),
+      home: const NavBarPage(),
     );
   }
 }
