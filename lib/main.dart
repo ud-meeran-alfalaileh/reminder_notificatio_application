@@ -8,7 +8,7 @@ import 'package:time_async/src/feature/nav_bar/view/main/navbar_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
- OneSignal.initialize("958e39d4-1b6d-40f1-a50a-c513d9a7a39e");
+  OneSignal.initialize("958e39d4-1b6d-40f1-a50a-c513d9a7a39e");
   OneSignal.Notifications.requestPermission(true);
   runApp(Phoenix(child: const MyApp()));
 }

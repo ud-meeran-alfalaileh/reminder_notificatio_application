@@ -42,10 +42,7 @@ class ChatController extends GetxController {
     try {
       var response = await http.post(
         Uri.parse('https://api.openai.com/v1/chat/completions'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization':
-         },
+        headers: {'Content-Type': 'application/json', 'Authorization': ""},
         body: json.encode({
           'model': 'gpt-4o-mini',
           'messages': [
@@ -63,7 +60,7 @@ class ChatController extends GetxController {
           ],
         }),
       );
-
+      print(response.body);
       if (response.statusCode == 200) {
         var data = json.decode(utf8.decode(response.bodyBytes));
         var responseText = data['choices'][0]['message']['content'];

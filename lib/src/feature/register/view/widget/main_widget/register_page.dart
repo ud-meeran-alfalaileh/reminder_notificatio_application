@@ -176,8 +176,9 @@ class RegisterPage extends StatelessWidget {
                                 children: [
                                   nextButton(() {
                                     errorText.value = validateAllFields()!;
-
-                                    // controller.register(context);
+                                    errorText.value == 'valid'
+                                        ? controller.register(context)
+                                        : null;
                                   }),
                                 ],
                               ),
