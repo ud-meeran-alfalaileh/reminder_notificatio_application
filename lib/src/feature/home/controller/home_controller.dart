@@ -28,9 +28,17 @@ class HomeController extends GetxController {
   @override
   void onInit() async {
     await user.loadToken();
-    await getTasks();
+    // await getTasks(user.);
 
     super.onInit();
+  }
+
+
+  vaildField(String field) {
+    if (field.isEmpty) {
+      return "fill the ".tr;
+    }
+    return null;
   }
 
   Future<void> addTask() async {
@@ -55,12 +63,14 @@ class HomeController extends GetxController {
     print(response.body);
     print(response.statusCode);
     if (response.statusCode == 200) {
-      await getTasks();
+      await getTasks(user.userId);
       Get.back();
     }
   }
 
   Future<void> updateTask(id) async {
+    tasks.clear();
+
     final body = jsonEncode({
       'id': id,
       "userId": user.userId.value,
@@ -83,7 +93,7 @@ class HomeController extends GetxController {
     print(response.body);
     print(response.statusCode);
     if (response.statusCode == 200) {
-      await getTasks();
+      await getTasks(user.userId);
       Get.back();
     }
   }
@@ -99,15 +109,14 @@ class HomeController extends GetxController {
     print(response.body);
     print(response.statusCode);
     if (response.statusCode == 200) {
-      await getTasks();
+      await getTasks(user.userId);
       Get.back();
     }
   }
 
-  Future<void> getTasks() async {
+  Future<void> getTasks(id) async {
     final response = await http.get(
-      Uri.parse(
-          "http://166.1.227.102:7010/api/Tasks/GetByUserId/${user.userId}"),
+      Uri.parse("http://166.1.227.102:7010/api/Tasks/GetByUserId/${id}"),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',

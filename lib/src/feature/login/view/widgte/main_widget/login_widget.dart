@@ -61,6 +61,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                       //   height: 20,
                       // ),
                       50.0.kH,
+
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25),
                         child: Column(
@@ -73,7 +74,22 @@ class _LoginWidgetState extends State<LoginWidget> {
                             ),
                             10.0.kH,
                             LoginText.mainText('Sign In'),
-                            //email
+                            Obx(() {
+                              return errorText.value != "valid"
+                                  ? Row(
+                                      children: [
+                                        Text(
+                                          errorText.value,
+                                          style: const TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 14.0),
+                                          textAlign: TextAlign.start,
+                                        ),
+                                      ],
+                                    )
+                                  : const SizedBox
+                                      .shrink(); // If no errors, display nothing
+                            }),
                             AuthForm(
                               formModel: FormModel(
                                   icon: Icons.person_2_outlined,
@@ -129,7 +145,10 @@ class _LoginWidgetState extends State<LoginWidget> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 nextButton(() {
-                                  controller.login(context);
+                                  errorText.value = validateAllFields()!;
+                                  errorText.value == 'valid'
+                                      ? controller.login(context)
+                                      : null;
                                   // Get.to(NavBarPage());
                                 }),
                               ],

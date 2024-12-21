@@ -28,14 +28,14 @@ class LoginController extends GetxController {
 
   vaildEmail(String? email) {
     if (!GetUtils.isEmail(email!)) {
-      return "EmailValidate".tr;
+      return "invalid email".tr;
     }
     return null;
   }
 
   vaildPassword(String? password) {
-    if (!GetUtils.isLengthGreaterOrEqual(password, 8)) {
-      return "PasswordValidation".tr;
+    if (!GetUtils.isLengthGreaterOrEqual(password, 5)) {
+      return "password must be 6 length".tr;
     }
     return null;
   }
@@ -87,7 +87,7 @@ class LoginController extends GetxController {
         showTopSnackBar(
           Overlay.of(context),
           CustomSnackBar.error(
-            message: 'loginError'.tr,
+            message: 'Invalid login credentials '.tr,
           ),
         );
 

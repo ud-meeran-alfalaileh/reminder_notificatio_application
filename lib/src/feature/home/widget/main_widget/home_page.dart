@@ -23,8 +23,14 @@ class _HomePageState extends State<HomePage> {
   User user = User();
   @override
   void initState() {
-    user.loadToken();
+    initMethod();
     super.initState();
+  }
+
+  Future<void> initMethod() async {
+    await user.loadToken();
+
+    await controller.getTasks(user.userId);
   }
 
   @override
@@ -42,8 +48,8 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       children: [
                         IconButton(
-                            onPressed: () {
-                              user.clearId();
+                            onPressed: () async {
+                              await user.clearId();
                               Get.offAll(() => NavBarPage());
                               OneSignal.logout();
                             },

@@ -62,8 +62,8 @@ class _NavBarPageState extends State<NavBarPage> {
                           return const NotificationPage();
                         case 2:
                           return const FavoritNotification();
-                        case 3:
-                          return ChatPage();
+                        // case 3:
+                        //   return ChatPage();
 
                         default:
                           return Scaffold(
@@ -112,7 +112,8 @@ class _NavBarPageState extends State<NavBarPage> {
                               ),
                               onTap: () {
                                 controller.setSelectedIndex(1);
-                                notificationController.getNotification();
+                                notificationController
+                                    .getNotification(user.userId);
                               },
                               isSelected: controller.selectedIndex.value == 1,
                             ),

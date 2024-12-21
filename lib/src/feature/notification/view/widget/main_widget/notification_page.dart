@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:time_async/src/config/sizes/size_box_extension.dart';
 import 'package:time_async/src/config/sizes/sizes.dart';
 import 'package:time_async/src/config/theme/theme.dart';
+import 'package:time_async/src/core/user.dart';
+import 'package:time_async/src/feature/chat_bot/widget/main_widget/chat_page.dart';
 import 'package:time_async/src/feature/home/widget/text/home_text.dart';
 import 'package:time_async/src/feature/notification/controller/notification_controller.dart';
 
@@ -15,10 +18,17 @@ class NotificationPage extends StatefulWidget {
 
 class _NotificationPageState extends State<NotificationPage> {
   final controller = Get.put(NotificationController());
+  User user = User();
   @override
   void initState() {
-    controller.getNotification();
     super.initState();
+  }
+
+  Future<void> initMethod() async {
+    controller.notification.clear();
+    // controller.favNotification.clear();
+    await user.loadToken();
+    await controller.getNotification(user.userId);
   }
 
   @override
@@ -59,9 +69,11 @@ class _NotificationPageState extends State<NotificationPage> {
                           return 20.0.kH;
                         },
                         itemBuilder: (BuildContext context, int index) {
+                          var isLoadingFav = false.obs;
+
                           var isFav = controller.notification[index].isFav.obs;
                           return buildNotificationContainer(
-                              context, index, isFav);
+                              context, index, isFav, isLoadingFav);
                         },
                       ),
               ),
@@ -74,28 +86,46 @@ class _NotificationPageState extends State<NotificationPage> {
   }
 
   Stack buildNotificationContainer(
-      BuildContext context, int index, RxBool isFav) {
+      BuildContext context, int index, RxBool isFav, RxBool isLoadingFav) {
     return Stack(
       children: [
         Align(
           alignment: Alignment.centerRight,
           child: GestureDetector(
             onTap: () {
-              // Show the dialog with the notification message
+              print(controller.notification[index].timeSent);
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
                     backgroundColor: AppTheme.lightAppColors.background,
-                    title: Text(
-                      'Notification',
-                      style: TextStyle(
-                        fontFamily: 'Kanti',
-                        fontSize: 20,
-                        color: AppTheme.lightAppColors.mainTextcolor,
-                        fontWeight: FontWeight
-                            .w300, // Use FontWeight.bold for the bold variant
-                      ),
+                    title: Column(
+                      children: [
+                        Text(
+                          'Notification',
+                          style: TextStyle(
+                            fontFamily: 'Kanti',
+                            fontSize: 20,
+                            color: AppTheme.lightAppColors.mainTextcolor,
+                            fontWeight: FontWeight
+                                .w300, // Use FontWeight.bold for the bold variant
+                          ),
+                        ),
+                        Text(
+                          DateFormat('dd MMM yyyy, hh:mm a').format(
+                            DateTime.parse(controller
+                                .notification[index].timeSent
+                                .toString()),
+                          ),
+                          style: TextStyle(
+                            fontFamily: 'Kanti',
+                            fontSize: 20,
+                            color: AppTheme.lightAppColors.mainTextcolor,
+                            fontWeight: FontWeight
+                                .w300, // Use FontWeight.bold for the bold variant
+                          ),
+                        ),
+                      ],
                     ),
                     content: HomeText.titlText(
                         controller.notification[index].response),
@@ -150,17 +180,21 @@ class _NotificationPageState extends State<NotificationPage> {
                         "Task Name: ${controller.notification[index].taskName.toString()}"),
                   ),
                   const Spacer(),
-                  Obx(() => controller.isLoadingFav.value
-                      ? const CircularProgressIndicator()
+                  Obx(() => isLoadingFav.value
+                      ? CircularProgressIndicator(
+                          color: AppTheme.lightAppColors.primary,
+                        )
                       : GestureDetector(
-                          onTap: () {
+                          onTap: () async {
+                            isLoadingFav.value = true;
                             isFav.value = !isFav.value;
-                            controller.putNotification(
+                            await controller.putNotification(
                                 controller.notification[index].id, isFav.value);
                             print(isFav.value);
                             print(
                               controller.notification[index].id,
                             );
+                            isLoadingFav.value = false;
                           },
                           child: Image.asset(
                             isFav.value
@@ -174,9 +208,18 @@ class _NotificationPageState extends State<NotificationPage> {
             ),
           ),
         ),
-        Align(
-            alignment: Alignment.centerLeft,
-            child: Image.asset('assets/image/aiLogo.png'))
+        GestureDetector(
+          onTap: () {
+            Get.to(() => ChatPage(
+                  description: controller.notification[index].taskName,
+                  notification: controller.notification[index].response,
+                  title: controller.notification[index].taskName,
+                ));
+          },
+          child: Align(
+              alignment: Alignment.centerLeft,
+              child: Image.asset('assets/image/aiLogo.png')),
+        )
       ],
     );
   }

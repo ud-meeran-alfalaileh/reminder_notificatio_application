@@ -13,6 +13,7 @@ class User {
   loadToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     userId.value = prefs.getInt('LoginId') ?? 0;
+    print(userId.value);
   }
 
   saveId(int id) async {

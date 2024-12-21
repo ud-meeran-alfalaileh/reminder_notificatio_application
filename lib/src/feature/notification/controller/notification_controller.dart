@@ -20,14 +20,13 @@ class NotificationController extends GetxController {
   }
 
   var isLoading = false.obs;
-  var isLoadingFav = false.obs;
-  Future<void> getNotification() async {
+   Future<void> getNotification(id) async {
     try {
       print(user.userId.value);
       isLoading.value = true;
       final response = await http.get(
         Uri.parse(
-            "http://166.1.227.102:7010/api/Notifications/GetTaskAndNotficatioByUserId/${user.userId}"),
+            "http://166.1.227.102:7010/api/Notifications/GetTaskAndNotficatioByUserId/${id}"),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -78,8 +77,7 @@ class NotificationController extends GetxController {
         'notificationId': id,
         "isFav": isFav,
       });
-      isLoadingFav.value = true;
-
+ 
       final response = await http.put(
         Uri.parse("http://166.1.227.102:7010/api/Notifications/update-isfav"),
         headers: {
@@ -92,14 +90,11 @@ class NotificationController extends GetxController {
       print(response.statusCode);
 
       if (response.statusCode == 200) {
-        isLoadingFav.value = false;
       } else {
         // Handle non-200 status codes
         print('Failed with status code: ${response.statusCode}');
-        isLoadingFav.value = false;
       }
     } catch (e) {
-      isLoadingFav.value = false;
       print('Error: $e');
     }
   }

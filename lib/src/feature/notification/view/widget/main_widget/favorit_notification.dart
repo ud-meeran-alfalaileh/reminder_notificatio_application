@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:time_async/src/config/sizes/size_box_extension.dart';
 import 'package:time_async/src/config/sizes/sizes.dart';
 import 'package:time_async/src/config/theme/theme.dart';
+import 'package:time_async/src/core/user.dart';
 import 'package:time_async/src/feature/home/widget/text/home_text.dart';
 import 'package:time_async/src/feature/notification/controller/notification_controller.dart';
 
@@ -15,10 +17,17 @@ class FavoritNotification extends StatefulWidget {
 
 class _FavoritNotificationState extends State<FavoritNotification> {
   final controller = Get.put(NotificationController());
+  User user = User();
   @override
   void initState() {
-    controller.getFavNotification();
+    initMethod();
     super.initState();
+  }
+
+  Future<void> initMethod() async {
+    await user.loadToken();
+
+    await controller.getFavNotification();
   }
 
   @override
@@ -84,15 +93,32 @@ class _FavoritNotificationState extends State<FavoritNotification> {
           builder: (BuildContext context) {
             return AlertDialog(
               backgroundColor: AppTheme.lightAppColors.background,
-              title: Text(
-                'Notification',
-                style: TextStyle(
-                  fontFamily: 'Kanti',
-                  fontSize: 20,
-                  color: AppTheme.lightAppColors.mainTextcolor,
-                  fontWeight: FontWeight
-                      .w300, // Use FontWeight.bold for the bold variant
-                ),
+              title: Column(
+                children: [
+                  Text(
+                    'Notification',
+                    style: TextStyle(
+                      fontFamily: 'Kanti',
+                      fontSize: 20,
+                      color: AppTheme.lightAppColors.mainTextcolor,
+                      fontWeight: FontWeight
+                          .w300, // Use FontWeight.bold for the bold variant
+                    ),
+                  ),
+                  Text(
+                    DateFormat('dd MMM yyyy, hh:mm a').format(
+                      DateTime.parse(controller.favNotification[index].timeSent
+                          .toString()),
+                    ),
+                    style: TextStyle(
+                      fontFamily: 'Kanti',
+                      fontSize: 20,
+                      color: AppTheme.lightAppColors.mainTextcolor,
+                      fontWeight: FontWeight
+                          .w300, // Use FontWeight.bold for the bold variant
+                    ),
+                  ),
+                ],
               ),
               content:
                   HomeText.titlText(controller.favNotification[index].response),
@@ -147,35 +173,31 @@ class _FavoritNotificationState extends State<FavoritNotification> {
               ),
             ),
             const Spacer(),
-            Obx(() => controller.isLoadingFav.value
-                ? const CircularProgressIndicator()
-                : GestureDetector(
-                    onTap: () async {
-                      // Set loading state
-                      controller.isLoadingFav.value = true;
+            Obx(() => GestureDetector(
+                  onTap: () async {
+                    // Set loading state
 
-                      // Remove notification
-                      await controller.putNotification(
-                        controller.favNotification[index].id,
-                        false,
-                      );
+                    // Remove notification
+                    await controller.putNotification(
+                      controller.favNotification[index].id,
+                      false,
+                    );
 
-                      // Update the list
-                      controller.favNotification.removeAt(index);
+                    // Update the list
+                    controller.favNotification.removeAt(index);
 
-                      // Update notifications
-                      await controller.getFavNotification();
+                    // Update notifications
+                    await controller.getFavNotification();
 
-                      // Clear loading state
-                      controller.isLoadingFav.value = false;
-                    },
-                    child: Image.asset(
-                      isFav.value
-                          ? "assets/image/fav.png"
-                          : "assets/image/unFav.png",
-                      width: context.screenWidth * .1,
-                    ),
-                  )),
+                    // Clear loading state
+                  },
+                  child: Image.asset(
+                    isFav.value
+                        ? "assets/image/fav.png"
+                        : "assets/image/unFav.png",
+                    width: context.screenWidth * .1,
+                  ),
+                )),
           ],
         ),
       ),

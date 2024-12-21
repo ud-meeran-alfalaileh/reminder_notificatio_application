@@ -50,6 +50,32 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
     super.initState();
   }
 
+  RxString errorText = "valid".obs;
+
+  String? validateAllFields() {
+    RxList<String?> errors = <String>[].obs;
+
+    // Validate each form field and collect errors
+    final nameError = controller.vaildField(controller.taskName.text);
+    final descriptionError =
+        controller.vaildField(controller.taskDescription.text);
+    final dateError = controller.vaildField(controller.taskDate.text);
+    final timeError = controller.vaildField(controller.taskTime.text);
+    final notificationError = controller.notificationSettingssTime.value;
+
+    if (nameError != null) errors.add("- $nameError name");
+    if (descriptionError != null) errors.add("- $descriptionError description");
+    if (timeError != null) errors.add("- $timeError Time");
+    if (dateError != null) errors.add("- $dateError Date");
+
+    if (notificationError == 0) errors.add("- choose time for notification");
+
+    if (errors.isNotEmpty) {
+      return errors.first;
+    }
+    return "valid";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,6 +116,21 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                     )
                   ],
                 ),
+                Obx(() {
+                  return errorText.value != "valid"
+                      ? Row(
+                          children: [
+                            Text(
+                              errorText.value,
+                              style: const TextStyle(
+                                  color: Colors.red, fontSize: 14.0),
+                              textAlign: TextAlign.start,
+                            ),
+                          ],
+                        )
+                      : const SizedBox
+                          .shrink(); // If no errors, display nothing
+                }),
                 20.0.kH,
                 Row(
                   children: [
@@ -231,11 +272,16 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                 20.0.kH,
                 GestureDetector(
                   onTap: () {
-                    widget.type == 'add'
+                    errorText.value = validateAllFields()!;
+                    errorText.value == 'valid'
                         ? {
-                            controller.addTask(),
+                            widget.type == 'add'
+                                ? {
+                                    controller.addTask(),
+                                  }
+                                : {controller.updateTask(widget.task!.id)}
                           }
-                        : {controller.updateTask(widget.task!.id)};
+                        : null;
                   },
                   child: Container(
                     width: context.screenWidth * .5,

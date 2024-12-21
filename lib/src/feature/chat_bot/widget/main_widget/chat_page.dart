@@ -6,8 +6,31 @@ import 'package:time_async/src/config/theme/theme.dart';
 import 'package:time_async/src/feature/chat_bot/controller/chat_controller.dart';
 import 'package:time_async/src/feature/home/widget/text/home_text.dart';
 
-class ChatPage extends StatelessWidget {
-  final ChatController controller = Get.put(ChatController());
+class ChatPage extends StatefulWidget {
+  const ChatPage(
+      {super.key,
+      required this.title,
+      required this.description,
+      required this.notification});
+
+  final String description;
+  final String title;
+  final String notification;
+  @override
+  State<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
+  final ChatController controller = Get.put(
+    ChatController(),
+  );
+  @override
+  void initState() {
+    controller.chatMessages.clear();
+    controller.generateResponse(
+        "", widget.description, widget.title, widget.notification);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +39,20 @@ class ChatPage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // Title
-            HomeText.secText("ChatBot"),
+            //
+            Row(
+              children: [
+                IconButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new_outlined,
+                      color: Color(0xffffffff),
+                    )),
+                HomeText.secText("ChatBot"),
+              ],
+            ),
             // Chat messages
             Obx(
               () => Expanded(
@@ -65,26 +100,52 @@ class ChatPage extends StatelessWidget {
             20.0.kH,
             Container(
               padding: const EdgeInsets.all(8.0),
-              color: Colors.white, // Add background for better visibility
+              color: Colors.white
+                  .withOpacity(0.4), // Add background for better visibility
               child: Row(
                 children: [
                   // Text input
                   Expanded(
                     child: TextField(
-                      controller: controller.messageController,
-                      decoration: const InputDecoration(
-                        hintText: 'Type your message...',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
+                        controller: controller.messageController,
+                        decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: AppTheme.lightAppColors.mainTextcolor
+                                  .withOpacity(0.1),
+                            ),
+                            borderRadius: BorderRadius.all(Radius.circular(30)),
+                          ),
+                          border: const OutlineInputBorder(),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: AppTheme.lightAppColors.mainTextcolor
+                                  .withOpacity(0.1),
+                            ),
+                            borderRadius: BorderRadius.all(Radius.circular(30)),
+                          ),
+                          hintText: 'Type your message...',
+                          hintStyle: TextStyle(
+                            fontFamily: "kanti",
+                            fontWeight: FontWeight.w200,
+                            letterSpacing: .5,
+                            color: AppTheme.lightAppColors.mainTextcolor
+                                .withOpacity(.5),
+                            fontSize: 20,
+                          ),
+                        )),
                   ),
                   // Send button
                   IconButton(
-                    icon: Icon(Icons.send),
+                    icon: Icon(
+                      Icons.send,
+                      color: AppTheme.lightAppColors.primary,
+                    ),
                     onPressed: () {
                       final message = controller.messageController.text.trim();
                       if (message.isNotEmpty) {
-                        controller.sendMessage(message);
+                        controller.sendMessage(message, widget.description,
+                            widget.title, widget.notification);
                         controller.messageController.clear();
                       }
                     },
@@ -92,8 +153,6 @@ class ChatPage extends StatelessWidget {
                 ],
               ),
             ),
-
-            (context.screenHeight * .1).kH
           ],
         ),
       ),
