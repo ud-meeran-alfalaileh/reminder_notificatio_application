@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:time_async/src/core/user.dart';
-import 'package:time_async/src/feature/home/model/tesk_model.dart';
+import 'package:time_async/src/feature/home/model/task_model.dart';
 
 class HomeController extends GetxController {
   var taskName = TextEditingController();
@@ -21,7 +21,8 @@ class HomeController extends GetxController {
   RxList<Period> notificationSettings = [
     Period(name: "Weekly", time: 168),
     Period(name: "Daily", time: 24),
-    Period(name: "2 hour", time: 2)
+    Period(name: "2 hour", time: 2),
+    Period(name: "2 hour", time: 2),
   ].obs;
   RxList<TaskModel> tasks = <TaskModel>[].obs;
   User user = User();
@@ -32,7 +33,6 @@ class HomeController extends GetxController {
 
     super.onInit();
   }
-
 
   vaildField(String field) {
     if (field.isEmpty) {

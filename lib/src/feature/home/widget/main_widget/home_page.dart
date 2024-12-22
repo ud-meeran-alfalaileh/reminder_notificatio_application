@@ -6,7 +6,7 @@ import 'package:time_async/src/config/sizes/sizes.dart';
 import 'package:time_async/src/config/theme/theme.dart';
 import 'package:time_async/src/core/user.dart';
 import 'package:time_async/src/feature/home/controller/home_controller.dart';
-import 'package:time_async/src/feature/home/model/tesk_model.dart';
+import 'package:time_async/src/feature/home/model/task_model.dart';
 import 'package:time_async/src/feature/home/widget/collection/add_edit_task_page.dart';
 import 'package:time_async/src/feature/home/widget/text/home_text.dart';
 import 'package:time_async/src/feature/nav_bar/view/main/navbar_page.dart';
@@ -40,67 +40,64 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         child: SizedBox(
           width: context.screenWidth,
-          child: Stack(
-            children: [
-              SingleChildScrollView(
-                child: Column(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                // Image.asset('assets/image/test.jpg'),
+                Row(
                   children: [
-                    Row(
-                      children: [
-                        IconButton(
-                            onPressed: () async {
-                              await user.clearId();
-                              Get.offAll(() => NavBarPage());
-                              OneSignal.logout();
-                            },
-                            icon: const Icon(
-                              Icons.logout,
-                              color: Colors.white,
-                            ))
-                      ],
-                    ),
-                    20.0.kH,
-                    Image.asset(
-                      'assets/image/clock.png',
-                    ),
-                    20.0.kH,
-                    Row(
-                      children: [
-                        20.0.kW,
-                        HomeText.mainText("  Tasks & Alarms"),
-                      ],
-                    ),
-                    10.0.kH,
-                    Obx(
-                      () => ListView.separated(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: controller.tasks.length,
-                        separatorBuilder: (BuildContext context, int index) {
-                          return 10.0.kH;
+                    IconButton(
+                        onPressed: () async {
+                          await user.clearId();
+                          Get.offAll(() => const NavBarPage());
+                          OneSignal.logout();
                         },
-                        itemBuilder: (BuildContext context, int index) {
-                          var light =
-                              controller.tasks[index].learnignnotification.obs;
-                          return taskContainer(context, light,
-                              controller.tasks[index], controller, index);
-                        },
-                      ),
-                    ),
-                    10.0.kH,
-                    GestureDetector(
-                        onTap: () {
-                          controller.task.value = null;
-                          Get.to(() => const AddEditTaskPage(
-                                type: 'add',
-                              ));
-                        },
-                        child: Image.asset('assets/image/addButton.png')),
-                    100.0.kH,
+                        icon: const Icon(
+                          Icons.logout,
+                          color: Colors.white,
+                        ))
                   ],
                 ),
-              ),
-            ],
+                20.0.kH,
+                Image.asset(
+                  'assets/image/clock.png',
+                ),
+                20.0.kH,
+                Row(
+                  children: [
+                    20.0.kW,
+                    HomeText.mainText("  Tasks & Alarms"),
+                  ],
+                ),
+                10.0.kH,
+                Obx(
+                  () => ListView.separated(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: controller.tasks.length,
+                    separatorBuilder: (BuildContext context, int index) {
+                      return 10.0.kH;
+                    },
+                    itemBuilder: (BuildContext context, int index) {
+                      var light =
+                          controller.tasks[index].learnignnotification.obs;
+                      return taskContainer(context, light,
+                          controller.tasks[index], controller, index);
+                    },
+                  ),
+                ),
+                10.0.kH,
+                GestureDetector(
+                    onTap: () {
+                      controller.task.value = null;
+                      Get.to(() => const AddEditTaskPage(
+                            type: 'add',
+                          ));
+                    },
+                    child: Image.asset('assets/image/addButton.png')),
+                100.0.kH,
+              ],
+            ),
           ),
         ),
       ),

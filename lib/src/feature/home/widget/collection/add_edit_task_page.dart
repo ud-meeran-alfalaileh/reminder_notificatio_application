@@ -4,7 +4,7 @@ import 'package:time_async/src/config/sizes/size_box_extension.dart';
 import 'package:time_async/src/config/sizes/sizes.dart';
 import 'package:time_async/src/config/theme/theme.dart';
 import 'package:time_async/src/feature/home/controller/home_controller.dart';
-import 'package:time_async/src/feature/home/model/tesk_model.dart';
+import 'package:time_async/src/feature/home/model/task_model.dart';
 import 'package:time_async/src/feature/home/widget/collection/task_form_widget.dart';
 import 'package:time_async/src/feature/home/widget/text/home_text.dart';
 import 'package:time_async/src/feature/login/model/login_form_model.dart';
@@ -78,6 +78,8 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
 
   @override
   Widget build(BuildContext context) {
+    RxString name = "Task name".obs;
+
     return Scaffold(
       backgroundColor: AppTheme.lightAppColors.background,
       body: SafeArea(
