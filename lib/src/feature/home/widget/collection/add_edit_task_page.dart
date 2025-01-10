@@ -36,6 +36,8 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                 widget.task!.period.toString(),
             controller.notificationSettingss.value =
                 widget.task!.notificationSetting,
+            controller.priorityName.value = widget.task!.taskproperty,
+            controller.status.value = widget.task!.taskStatus,
             light.value = widget.task!.learnignnotification
           }
         : {
@@ -44,6 +46,8 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
             controller.taskDate..clear(),
             controller.taskTime..clear(),
             controller.notificationSetting.clear(),
+            controller.priorityName.value = "",
+            controller.notificationSettingssTime.value = 0,
             controller.learnignnotification.value = false,
             light.value = false
           };
@@ -272,6 +276,47 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                   ),
                 ),
                 20.0.kH,
+                SizedBox(
+                  width: context.screenWidth * .9,
+                  height: context.screenHeight * .06,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    itemCount: controller.priority.length,
+                    separatorBuilder: (BuildContext context, int index) {
+                      return SizedBox(
+                          width: 10); // Adjust spacing between items
+                    },
+                    itemBuilder: (BuildContext context, int index) {
+                      // final priority = controller.priority[index];
+                      return GestureDetector(
+                        onTap: () {
+                          controller.priorityName.value =
+                              controller.priority[index].name;
+                        },
+                        child: Obx(
+                          () => Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: controller.priorityName.value !=
+                                      controller.priority[index].name
+                                  ? AppTheme.lightAppColors.background
+                                  : Color(int.parse(controller
+                                      .priority[index].color
+                                      .replaceFirst('#', '0xFF'))),
+                            ),
+                            child: Center(
+                              child: HomeText.titlShowText(
+                                  controller.priority[index].name),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(height: 20),
                 GestureDetector(
                   onTap: () {
                     errorText.value = validateAllFields()!;
@@ -304,7 +349,8 @@ class _AddEditTaskPageState extends State<AddEditTaskPage> {
                         child: HomeText.mainText(
                             widget.type == 'edit' ? "Edit" : "Add")),
                   ),
-                )
+                ),
+                20.0.kH,
               ],
             ),
           ),
@@ -362,7 +408,7 @@ Future<void> taskDateWidget(
   DateTime? newDate = await showDatePicker(
     context: context,
     initialDate: DateTime.now(),
-    firstDate: DateTime(2000),
+    firstDate: DateTime.now(),
     lastDate: DateTime(2100),
     builder: (context, child) {
       return Theme(

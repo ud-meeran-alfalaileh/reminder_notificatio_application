@@ -26,10 +26,14 @@ class RegisterPage extends StatelessWidget {
       final emailError = controller.vaildEmail(controller.email.text);
       final passwordError = controller.vaildPassword(controller.password.text);
       final confirmPasswordError = controller.validConfirmPassword();
+      final firstName = controller.validName(controller.firstName.text);
+      final lastName = controller.validName(controller.secName.text);
 
       if (emailError != null) errors.add("- $emailError");
       if (passwordError != null) errors.add("- $passwordError");
       if (confirmPasswordError != null) errors.add("- $confirmPasswordError");
+      if (firstName != null) errors.add("- $firstName");
+      if (lastName != null) errors.add("- $lastName");
 
       if (errors.isNotEmpty) {
         return errors.first;
@@ -81,6 +85,32 @@ class RegisterPage extends StatelessWidget {
                                     : const SizedBox
                                         .shrink(); // If no errors, display nothing
                               }),
+                              AuthForm(
+                                formModel: FormModel(
+                                    icon: Icons.person_2_outlined,
+                                    controller: controller.firstName,
+                                    enableText: false,
+                                    hintText: 'First Name'.tr,
+                                    invisible: false,
+                                    validator: null,
+                                    type: TextInputType.emailAddress,
+                                    inputFormat: [],
+                                    onTap: () {}),
+                              ),
+                              (5.5).kH,
+                              AuthForm(
+                                formModel: FormModel(
+                                    icon: Icons.person_2_outlined,
+                                    controller: controller.secName,
+                                    enableText: false,
+                                    hintText: 'Last Name'.tr,
+                                    invisible: false,
+                                    validator: null,
+                                    type: TextInputType.emailAddress,
+                                    inputFormat: [],
+                                    onTap: () {}),
+                              ),
+                              (5.5).kH,
                               AuthForm(
                                 formModel: FormModel(
                                     icon: Icons.person_2_outlined,
@@ -195,6 +225,8 @@ class RegisterPage extends StatelessWidget {
                                       Get.back();
                                     }),
                                   )),
+                              20.0.kH,
+                              20.0.kH,
                             ],
                           ),
                         ),

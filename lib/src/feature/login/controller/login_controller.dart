@@ -59,7 +59,7 @@ class LoginController extends GetxController {
         "password": password.text.trim(),
       });
       final response = await http.post(
-        Uri.parse("http://166.1.227.102:7010/api/User/login"),
+        Uri.parse("http://166.1.227.210:7010/api/User/login"),
         body: body,
         headers: {
           'Content-Type': 'application/json',

@@ -20,13 +20,13 @@ class NotificationController extends GetxController {
   }
 
   var isLoading = false.obs;
-   Future<void> getNotification(id) async {
+  Future<void> getNotification(id) async {
     try {
       print(user.userId.value);
       isLoading.value = true;
       final response = await http.get(
         Uri.parse(
-            "http://166.1.227.102:7010/api/Notifications/GetTaskAndNotficatioByUserId/${id}"),
+            "http://166.1.227.210:7010/api/Notifications/GetTaskAndNotficatioByUserId/${id}"),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -51,7 +51,7 @@ class NotificationController extends GetxController {
       isLoading.value = true;
       final response = await http.get(
         Uri.parse(
-            "http://166.1.227.102:7010/api/Notifications/GetNotificationsAndTaskByUserIdWhereisFav/${user.userId}"),
+            "http://166.1.227.210:7010/api/Notifications/GetNotificationsAndTaskByUserIdWhereisFav/${user.userId}"),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -77,9 +77,9 @@ class NotificationController extends GetxController {
         'notificationId': id,
         "isFav": isFav,
       });
- 
+
       final response = await http.put(
-        Uri.parse("http://166.1.227.102:7010/api/Notifications/update-isfav"),
+        Uri.parse("http://166.1.227.210:7010/api/Notifications/update-isfav"),
         headers: {
           'Content-Type': 'application/json', // Specify JSON format
         },

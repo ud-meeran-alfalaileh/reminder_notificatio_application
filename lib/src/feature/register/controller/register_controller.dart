@@ -12,6 +12,8 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 class RegisterController extends GetxController {
   final email = TextEditingController();
   final password = TextEditingController();
+  final firstName = TextEditingController();
+  final secName = TextEditingController();
   final confirmPassword = TextEditingController();
   var isLoading = false.obs;
   User user = User();
@@ -37,6 +39,13 @@ class RegisterController extends GetxController {
     return null;
   }
 
+  validName(String? name) {
+    if (name!.isEmpty) {
+      return "Please fill the fields".tr;
+    }
+    return null;
+  }
+
   Future<void> loginUser(String externalId) async {
     try {
       await OneSignal.login(externalId);
@@ -53,10 +62,12 @@ class RegisterController extends GetxController {
     var body = jsonEncode({
       "email": email.text.trim(),
       "password": password.text.trim(),
+      "firstName": firstName.text.trim(),
+      "sectName": secName.text.trim(),
     });
 
     final response = await http.post(
-      Uri.parse('http://166.1.227.102:7010/api/User/register'),
+      Uri.parse('http://166.1.227.210:7010/api/User/register'),
       body: body,
       headers: {
         'Content-Type': 'application/json',

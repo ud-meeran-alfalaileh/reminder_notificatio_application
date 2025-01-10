@@ -5,6 +5,8 @@ class TaskModel {
   final String taskDescription;
   final String taskTime;
   final String taskDate;
+  final String taskStatus;
+  final String taskproperty;
   final int period;
   final String notificationSetting;
   bool learnignnotification;
@@ -13,6 +15,8 @@ class TaskModel {
     required this.userId,
     required this.taskName,
     required this.taskDescription,
+    required this.taskStatus,
+    required this.taskproperty,
     required this.taskTime,
     required this.period,
     required this.taskDate,
@@ -24,6 +28,8 @@ class TaskModel {
         id: json['id'],
         userId: json['userId'],
         taskName: json['taskName'] ?? '',
+        taskproperty: json['taskproperty'] ?? '',
+        taskStatus: json['taskStatus'] ?? '',
         taskDescription: json['taskDescription'] ?? '',
         taskTime: json['taskTime'] ?? '',
         taskDate: json['taskDate'] ?? '',

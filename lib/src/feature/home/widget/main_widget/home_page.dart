@@ -80,7 +80,9 @@ class _HomePageState extends State<HomePage> {
                     },
                     itemBuilder: (BuildContext context, int index) {
                       var light =
-                          controller.tasks[index].learnignnotification.obs;
+                          controller.tasks[index].taskStatus == "In Progress"
+                              ? false.obs
+                              : true.obs;
                       return taskContainer(context, light,
                           controller.tasks[index], controller, index);
                     },
@@ -150,7 +152,17 @@ class _HomePageState extends State<HomePage> {
                           value: light.value,
                           activeColor:
                               AppTheme.lightAppColors.primary.withOpacity(0.5),
-                          onChanged: (bool value) {},
+                          onChanged: (bool value) {
+                            light.value = !light.value;
+                            if (light.value == true) {
+                              controller.updateStatus(
+                                  model.id, "Done", context);
+                            } else {
+                              controller.updateStatus(
+                                  model.id, "In Progress", context);
+                            }
+                            print(light.value);
+                          },
                         ),
                       ),
                     ],

@@ -4,7 +4,7 @@ import 'package:time_async/src/config/sizes/sizes.dart';
 import 'package:time_async/src/config/theme/theme.dart';
 import 'package:time_async/src/core/user.dart';
 import 'package:time_async/src/core/utils/loading_page.dart';
-import 'package:time_async/src/feature/chat_bot/widget/main_widget/chat_page.dart';
+import 'package:time_async/src/feature/calendar/calendar_page.dart';
 import 'package:time_async/src/feature/home/widget/main_widget/home_page.dart';
 import 'package:time_async/src/feature/login/view/pages/login_page.dart';
 import 'package:time_async/src/feature/nav_bar/controller/nav_bar_controller.dart';
@@ -12,6 +12,7 @@ import 'package:time_async/src/feature/nav_bar/view/main/custome_navbar.dart';
 import 'package:time_async/src/feature/notification/controller/notification_controller.dart';
 import 'package:time_async/src/feature/notification/view/widget/main_widget/favorit_notification.dart';
 import 'package:time_async/src/feature/notification/view/widget/main_widget/notification_page.dart';
+import 'package:time_async/src/feature/profile/profile_page.dart';
 
 class NavBarPage extends StatefulWidget {
   const NavBarPage({super.key});
@@ -35,7 +36,7 @@ class _NavBarPageState extends State<NavBarPage> {
       Future.delayed(const Duration(seconds: 1)).whenComplete(() {
         initialState();
       });
-  });
+    });
 
     super.initState();
   }
@@ -61,7 +62,11 @@ class _NavBarPageState extends State<NavBarPage> {
                         case 1:
                           return const NotificationPage();
                         case 2:
+                          return const CalendarWidget();
+                        case 3:
                           return const FavoritNotification();
+                        case 4:
+                          return const ProfilePage();
                         // case 3:
                         //   return ChatPage();
 
@@ -121,13 +126,25 @@ class _NavBarPageState extends State<NavBarPage> {
                               icon: const Center(
                                 child: Icon(
                                   size: 30,
-                                  Icons.favorite,
+                                  Icons.calendar_month,
                                 ),
                               ),
                               onTap: () {
                                 controller.setSelectedIndex(2);
                               },
                               isSelected: controller.selectedIndex.value == 2,
+                            ),
+                            CustomNavItem(
+                              icon: const Center(
+                                child: Icon(
+                                  size: 30,
+                                  Icons.favorite,
+                                ),
+                              ),
+                              onTap: () {
+                                controller.setSelectedIndex(3);
+                              },
+                              isSelected: controller.selectedIndex.value == 3,
                             ),
                             // Use a Builder widget to access Scaffold context
                             Builder(
@@ -139,10 +156,10 @@ class _NavBarPageState extends State<NavBarPage> {
                                     ),
                                   ),
                                   onTap: () {
-                                    controller.setSelectedIndex(3);
+                                    controller.setSelectedIndex(4);
                                   },
                                   isSelected:
-                                      controller.selectedIndex.value == 3,
+                                      controller.selectedIndex.value == 4,
                                 );
                               },
                             ),

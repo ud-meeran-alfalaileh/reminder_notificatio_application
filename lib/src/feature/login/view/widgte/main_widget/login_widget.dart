@@ -25,7 +25,7 @@ class _LoginWidgetState extends State<LoginWidget> {
     RxList<String?> errors = <String>[].obs;
 
     // Validate each form field and collect errors
-    final emailError = controller.vaildEmail(controller.emailcontroller.text);
+  final emailError = controller.vaildEmail(controller.emailcontroller.text);
     final passwordError = controller.vaildPassword(controller.password.text);
 
     if (emailError != null) errors.add("- $emailError");
